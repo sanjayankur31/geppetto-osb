@@ -120,23 +120,23 @@ define(function(require) {
                     nticks: 8,
                     ticklen: 4,
                     tickcolor : 'rgb(255, 255, 255)',
-		    tickfont: {
-			family: 'Helvetica Neue, sans-serif',
-			size : 11,
-			color: 'rgb(255, 255, 255)'
-		    },
-		    titlefont : {
-			family: 'Helvetica Neue, sans-serif',
-			size : 12,
-			color: 'rgb(255, 255, 255)'
-		    },
+                    tickfont: {
+                        family: 'Helvetica Neue, sans-serif',
+                        size : 11,
+                        color: 'rgb(255, 255, 255)'
+                    },
+                    titlefont : {
+                        family: 'Helvetica Neue, sans-serif',
+                        size : 12,
+                        color: 'rgb(255, 255, 255)'
+                    },
                 },
                 yaxis: {
                     ticks: '',
                     showticklabels: false
                 },
                 paper_bgcolor: 'rgba(66, 59, 59, 0.90)',
-		plot_bgcolor: 'transparent'
+                plot_bgcolor: 'transparent'
             };
         },
 
@@ -159,12 +159,12 @@ define(function(require) {
             };
 
             f = scalefn_255(f);
-            
+
             var colorscale = [];
             var step = (max-min)/n;
             var x = min;
             var rgb = [];
-            
+
             for (var i=0; i<n; ++i) {
                 colorscale.push([i/n, f(x)]);
                 colorscale.push([(i+1)/n, f(x)]);

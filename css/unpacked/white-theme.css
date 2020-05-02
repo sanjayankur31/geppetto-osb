@@ -11,7 +11,7 @@ body {
     color: white;
 }
 
-.nthTr { 
+.nthTr {
     background: rgba(179, 179, 179, 0.8);
 }
 
@@ -19,7 +19,7 @@ body {
     background: rgba(211,211,211,0.5);
 }
 
-#experiments, #console { 
+#experiments, #console {
     background: rgba(211,211,211,0.8) !important;
 }
 
@@ -27,18 +27,18 @@ body {
     color: black;
 }
 
-.btn { 
+.btn {
     background: rgb(211,211,211);
 }
 
 .main-svg:first-child {
     background: rgba(255,255,255,0.5) !important;
 }
- 
+
 .legend .bg {
     fill: rgba(255, 255, 255, 0.5) !important;
 }
- 
+
 .ui-dialog {
     background: rgba(255, 255, 255, 0.90) !important;
 }

@@ -23,8 +23,8 @@ define(function(require) {
         //Loading spinner initialization
         GEPPETTO.Spinner.setLogo("gpt-osb");
 
-		//Canvas initialisation
-		GEPPETTO.ComponentFactory.addComponent('CANVAS', {}, document.getElementById("sim"), function () {
+        //Canvas initialisation
+        GEPPETTO.ComponentFactory.addComponent('CANVAS', {}, document.getElementById("sim"), function () {
             this.displayAllInstances();
 
             this.engine.setLinesThreshold(10000);
@@ -78,7 +78,7 @@ define(function(require) {
                                 title: 'Temperature'
                             }
                         },
-		    dropboxUpload: {
+                    dropboxUpload: {
                         type: 'boolean',
                         title: 'Upload results to Dropbox on completion'
                     }
@@ -110,47 +110,47 @@ define(function(require) {
                     required_dt = true;
                     formData['timeStep'] = parseFloat(values[properties.indexOf("required_dt_ms")])/1000;
                     $("#experimentsOutput").find(".activeExperiment").find("td[name='timeStep']").html(formData['timeStep']).blur();
-		}
+        }
 
                 if (properties.indexOf("recommended_dt_ms") > -1) {
                     formData['timeStep'] = parseFloat(values[properties.indexOf("recommended_dt_ms")])/1000;
                     $("#experimentsOutput").find(".activeExperiment").find("td[name='timeStep']").html(formData['timeStep']).blur();
-		} else
+                } else
                     formData['timeStep'] = Project.getActiveExperiment().simulatorConfigurations[pathRef].getTimeStep();
- 
+
                 if (properties.indexOf("recommended_duration_ms") > -1) {
                     formData['length'] = parseFloat(values[properties.indexOf("recommended_duration_ms")])/1000;
                     $("#experimentsOutput").find(".activeExperiment").find("td[name='length']").html(formData['length']).blur();
-		} else
+                } else
                     formData['length'] = Project.getActiveExperiment().simulatorConfigurations[pathRef].getLength();
 
                 formData['simulator'] = Project.getActiveExperiment().simulatorConfigurations[pathRef].getSimulator();
             }
 
-	    var uiSchema = {
-		dropboxUpload: {
-                    classNames: "dropbox-check",
-		    ...(!GEPPETTO.UserController.getDropboxToken()) && {'ui:disabled': 'false'}
-		},
+        var uiSchema = {
+        dropboxUpload: {
+            classNames: "dropbox-check",
+            ...(!GEPPETTO.UserController.getDropboxToken()) && {'ui:disabled': 'false'}
+        },
                 timeStep: {
                     ...(required_dt) && {'ui:disabled': 'true'}
-		}
-	    };
+                }
+        };
 
             var submitHandler = function(data) {
-		var formData = data.formData;
+                var formData = data.formData;
                 GEPPETTO.Flows.showSpotlightForRun(formCallback);
                 formWidget.destroy();
                 $("#exptRunForm").remove()
-		var thisExp = Project.getActiveExperiment();
-		function experimentCompleteHandler() {
-		    if (formData.dropboxUpload)
-			thisExp.uploadResults(
-			    GEPPETTO.ModelFactory.getAllTypesOfType(Model.neuroml.network)[0].getName(),
-			    "GEPPETTO_RECORDING"
-			);
-		}
-		GEPPETTO.on(GEPPETTO.Events.Experiment_completed, experimentCompleteHandler);
+                var thisExp = Project.getActiveExperiment();
+                function experimentCompleteHandler() {
+                    if (formData.dropboxUpload)
+                        thisExp.uploadResults(
+                            GEPPETTO.ModelFactory.getAllTypesOfType(Model.neuroml.network)[0].getName(),
+                            "GEPPETTO_RECORDING"
+                        );
+                }
+                GEPPETTO.on(GEPPETTO.Events.Experiment_completed, experimentCompleteHandler);
             };
 
             var errorHandler = function() {
@@ -167,7 +167,7 @@ define(function(require) {
                     GEPPETTO.UserController.getUserPrivileges().indexOf("ADMIN") == -1) {
                     $("#procWarning").show().text("Experiment too large: reduce number of watched variables, length, or increase timestep.");
                     $("#exptRunForm button[type='submit']").prop('disabled', true);
-                } 
+                }
                 else if (nProc > procLimit) {
                     $("#procWarning").show().text("Number of processors currently cannot exceed " + procLimit + " for: " + formObject.formData['simulator']);
                     $("#exptRunForm button[type='submit']").prop('disabled', true);
@@ -207,7 +207,7 @@ define(function(require) {
                 id: formId,
                 name: formName,
                 schema: schema,
-		uiSchema: uiSchema,
+                uiSchema: uiSchema,
                 formData: formData,
                 submitHandler: submitHandler,
                 errorHandler: errorHandler,
@@ -375,7 +375,7 @@ define(function(require) {
 
                 // what does it do when the button is pressed
                 GEPPETTO.on(GEPPETTO.Events.Experiment_completed, experimentCompleteHandler);
-               
+
                 // build list of paths for variables to watch
                 var watchedVars = [];
                 if(Project.getActiveExperiment() != undefined){
@@ -406,8 +406,8 @@ define(function(require) {
                         pulseStart: {[pulseGeneratorPath + '.delay']: formData.pulseStart},
                         pulseDuration: {[pulseGeneratorPath + '.duration']: formData.pulseStop-formData.pulseStart}
                     };
-                    
-                    
+
+
                     var simpleModelParametersMap = {};
                     // build experiment name based on parameters map
                     var experimentName = experimentNamePattern;
@@ -423,8 +423,8 @@ define(function(require) {
                     experimentName = experimentName.slice(0, experimentName.indexOf(','));
 
                     experimentsData.push({
-                    	name : experimentName,
-                    	modelParameters: simpleModelParametersMap,
+                        name : experimentName,
+                        modelParameters: simpleModelParametersMap,
                         watchedVariables: watchedVars,
                         timeStep: formData.timeStep/1000,
                         duration: formData.simDuration/1000,
@@ -457,7 +457,7 @@ define(function(require) {
                 // close widget
                 formWidget.destroy();
                 };
-                
+
                 var errorHandler = function() {
                     // error handling
                 };
@@ -488,7 +488,7 @@ define(function(require) {
         //Function to add a dialog when run button is pressed
         GEPPETTO.Flows.addCompulsoryAction('GEPPETTO.showExecutionDialog', GEPPETTO.Resources.RUN_FLOW);
 
-        //Logo initialization 
+        //Logo initialization
         GEPPETTO.ComponentFactory.addComponent('LOGO', {
             logo: 'gpt-osb'
         }, document.getElementById("geppettologo"));
@@ -500,35 +500,35 @@ define(function(require) {
         });
 
         var eventHandler = function(component){
-		};
-	var clickHandler = function(){
-                    GEPPETTO.CommandController.execute('Project.download();');
-		};
-		
-		GEPPETTO.on(GEPPETTO.Events.Project_downloaded,function(){
-			GEPPETTO.ModalFactory.infoDialog("Project downloaded", "Your project has been downloaded. You can unzip your downloaded project in your OSB repository for it to be available to everyone.");
-		});
+        };
+        var clickHandler = function(){
+            GEPPETTO.CommandController.execute('Project.download();');
+        };
 
-		var configuration = {
-				id: "DownloadProjectButton",
-				onClick : clickHandler,
-				eventHandler : eventHandler,
-				tooltipPosition : { my: "right center", at : "left-5 center"},
-				tooltipLabel : "Download your current project",
-				icon : "fa fa-download",
-				className : "btn DownloadProjectButton pull-right",
-				disabled : false,
-				hidden : false
-		};
+        GEPPETTO.on(GEPPETTO.Events.Project_downloaded,function(){
+            GEPPETTO.ModalFactory.infoDialog("Project downloaded", "Your project has been downloaded. You can unzip your downloaded project in your OSB repository for it to be available to everyone.");
+        });
 
-		//Download Project Button initialization
-		GEPPETTO.ComponentFactory.addComponent('BUTTON', {configuration: configuration}, document.getElementById("DownloadProjectButton"));
+        var configuration = {
+            id: "DownloadProjectButton",
+            onClick : clickHandler,
+            eventHandler : eventHandler,
+            tooltipPosition : { my: "right center", at : "left-5 center"},
+            tooltipLabel : "Download your current project",
+            icon : "fa fa-download",
+            className : "btn DownloadProjectButton pull-right",
+            disabled : false,
+            hidden : false
+        };
 
-        //Save initialization 
+        //Download Project Button initialization
+        GEPPETTO.ComponentFactory.addComponent('BUTTON', {configuration: configuration}, document.getElementById("DownloadProjectButton"));
+
+        //Save initialization
         GEPPETTO.ComponentFactory.addComponent('SAVECONTROL', {}, document.getElementById("SaveButton"),
-                                               function () {
-                                                   $(".SaveButton").tooltip({content: "Click star to save and enable simulation"});
-                                               });
+            function () {
+                $(".SaveButton").tooltip({content: "Click star to save and enable simulation"});
+            });
 
         var toggleClickHandler = function() {
             if (!window.Project.isPublic()) {
@@ -543,7 +543,7 @@ define(function(require) {
                 component.evaluateState();
             });
 
-	    GEPPETTO.on(GEPPETTO.Events.Project_persisted, function() {
+        GEPPETTO.on(GEPPETTO.Events.Project_persisted, function() {
                 component.evaluateState();
             });
 
@@ -594,36 +594,36 @@ define(function(require) {
             });
 
         GEPPETTO.ComponentFactory.addComponent('SPOTLIGHT', {}, document.getElementById("spotlight"), function() {
-            	var recordAll = {
-                    "label": "Record all membrane potentials",
-                    "actions": [
-                        // without setTimeout, this will hang when n
-                        // instances large
-                        "setTimeout(function(){var instances = Instances.getInstance(GEPPETTO.ModelFactory.getAllPotentialInstancesEndingWith('.v')); GEPPETTO.ExperimentsController.watchVariables(instances,true);},250);"
-                    ],
-                    "icon": "fa-dot-circle-o"
-                };
-            	
-            	var recordSoma = {
-            	        "label": "Record all membrane potentials at soma",
-            	        "actions": [
-                            "var instances=window.getSomaVariableInstances('v'); GEPPETTO.ExperimentsController.watchVariables(instances,true);"
-            	        ],
-            	        "icon": "fa-dot-circle-o"
-            	    };
-            	
-            	var lightUpSample = {
-                    "label": "Link morphology colour to recorded membrane potentials",
-                    "actions": [
-                        "GEPPETTO.SceneController.addColorFunction(GEPPETTO.ModelFactory.instances.getInstance(GEPPETTO.ModelFactory.getAllPotentialInstancesEndingWith('.v'),false), window.voltage_color);"
-                    ],
-                    "icon": "fa-lightbulb-o"
-                };
-                
-            	GEPPETTO.Spotlight.addSuggestion(recordSoma, GEPPETTO.Resources.RUN_FLOW);
-            	GEPPETTO.Spotlight.addSuggestion(recordAll, GEPPETTO.Resources.RUN_FLOW);
-            	GEPPETTO.Spotlight.addSuggestion(lightUpSample, GEPPETTO.Resources.PLAY_FLOW);
-            	GEPPETTO.Spotlight.addSuggestion(GEPPETTO.Spotlight.plotSample, GEPPETTO.Resources.PLAY_FLOW);
+            var recordAll = {
+                "label": "Record all membrane potentials",
+                "actions": [
+                    // without setTimeout, this will hang when n
+                    // instances large
+                    "setTimeout(function(){var instances = Instances.getInstance(GEPPETTO.ModelFactory.getAllPotentialInstancesEndingWith('.v')); GEPPETTO.ExperimentsController.watchVariables(instances,true);},250);"
+                ],
+                "icon": "fa-dot-circle-o"
+            };
+
+            var recordSoma = {
+                "label": "Record all membrane potentials at soma",
+                "actions": [
+                    "var instances=window.getSomaVariableInstances('v'); GEPPETTO.ExperimentsController.watchVariables(instances,true);"
+                ],
+                "icon": "fa-dot-circle-o"
+            };
+
+            var lightUpSample = {
+                "label": "Link morphology colour to recorded membrane potentials",
+                "actions": [
+                    "GEPPETTO.SceneController.addColorFunction(GEPPETTO.ModelFactory.instances.getInstance(GEPPETTO.ModelFactory.getAllPotentialInstancesEndingWith('.v'),false), window.voltage_color);"
+                ],
+                "icon": "fa-lightbulb-o"
+            };
+
+            GEPPETTO.Spotlight.addSuggestion(recordSoma, GEPPETTO.Resources.RUN_FLOW);
+            GEPPETTO.Spotlight.addSuggestion(recordAll, GEPPETTO.Resources.RUN_FLOW);
+            GEPPETTO.Spotlight.addSuggestion(lightUpSample, GEPPETTO.Resources.PLAY_FLOW);
+            GEPPETTO.Spotlight.addSuggestion(GEPPETTO.Spotlight.plotSample, GEPPETTO.Resources.PLAY_FLOW);
         });
 
         window.getRecordedMembranePotentials = function() {
@@ -795,15 +795,15 @@ define(function(require) {
                                     'plot_bgcolor': '#fff',
                                     'paper_bgcolor': 'rgb(255, 255, 255)',
                                     'xaxis.tickfont.color': 'rgb(80, 80, 80)',
-			            'yaxis.tickfont.color': 'rgb(80, 80, 80)',
-			            'yaxis.titlefont.color': 'rgb(80, 80, 80)',
-			            'xaxis.titlefont.color': 'rgb(80, 80, 80)',
+                                    'yaxis.tickfont.color': 'rgb(80, 80, 80)',
+                                    'yaxis.titlefont.color': 'rgb(80, 80, 80)',
+                                    'xaxis.titlefont.color': 'rgb(80, 80, 80)',
                                     'xaxis.showticklabels': true,
                                     'xaxis.tickcolor': 'rgb(80, 80, 80)',
                                     'xaxis.tickfont.size': 11,
-			            'yaxis.tickfont.size': 11,
-			            'xaxis.titlefont.size': 12,
-			            'yaxis.titlefont.size': 12
+                                    'yaxis.tickfont.size': 11,
+                                    'xaxis.titlefont.size': 12,
+                                    'yaxis.titlefont.size': 12
                                 });
                             } else {
                                 Plotly.restyle(plots[i].plotDiv, {
@@ -815,17 +815,17 @@ define(function(require) {
                                     'paper_bgcolor': 'rgb(255, 255, 255)',
                                     'xaxis.linecolor': 'rgb(80, 80, 80)',
                                     'yaxis.linecolor': 'rgb(80, 80, 80)',
-			            'xaxis.tickfont.color': 'rgb(80, 80, 80)',
-			            'yaxis.tickfont.color': 'rgb(80, 80, 80)',
-			            'yaxis.titlefont.color': 'rgb(80, 80, 80)',
-			            'xaxis.titlefont.color': 'rgb(80, 80, 80)',
-			            'xaxis.tickfont.size': 11,
-			            'yaxis.tickfont.size': 11,
-			            'xaxis.titlefont.size': 12,
-			            'yaxis.titlefont.size': 12,
-			            'legend.font.size': 12,
-			            'legend.font.color': 'rgb(80, 80, 80)',
-			            'legend.bgcolor': 'rgb(255, 255, 255)'
+                                    'xaxis.tickfont.color': 'rgb(80, 80, 80)',
+                                    'yaxis.tickfont.color': 'rgb(80, 80, 80)',
+                                    'yaxis.titlefont.color': 'rgb(80, 80, 80)',
+                                    'xaxis.titlefont.color': 'rgb(80, 80, 80)',
+                                    'xaxis.tickfont.size': 11,
+                                    'yaxis.tickfont.size': 11,
+                                    'xaxis.titlefont.size': 12,
+                                    'yaxis.titlefont.size': 12,
+                                    'legend.font.size': 12,
+                                    'legend.font.color': 'rgb(80, 80, 80)',
+                                    'legend.bgcolor': 'rgb(255, 255, 255)'
                                 });
                             }
                         }
@@ -848,15 +848,15 @@ define(function(require) {
                                     'plot_bgcolor': 'transparent',
                                     'paper_bgcolor': 'rgb(66, 59, 59, 0.9)',
                                     'xaxis.tickfont.color': defaults.xaxis.tickfont.color,
-			            'yaxis.tickfont.color': defaults.yaxis.tickfont.color,
-			            'yaxis.titlefont.color': defaults.yaxis.titlefont.color,
-			            'xaxis.titlefont.color': defaults.xaxis.titlefont.color,
+                                    'yaxis.tickfont.color': defaults.yaxis.tickfont.color,
+                                    'yaxis.titlefont.color': defaults.yaxis.titlefont.color,
+                                    'xaxis.titlefont.color': defaults.xaxis.titlefont.color,
                                     'xaxis.showticklabels': true,
                                     'xaxis.tickcolor': defaults.xaxis.tickcolor,
                                     'xaxis.tickfont.size': 11,
-			            'yaxis.tickfont.size': 11,
-			            'xaxis.titlefont.size': 12,
-			            'yaxis.titlefont.size': 12
+                                    'yaxis.tickfont.size': 11,
+                                    'xaxis.titlefont.size': 12,
+                                    'yaxis.titlefont.size': 12
                                 });
                             } else {
                                 Plotly.restyle(plots[i].plotDiv, {
@@ -868,18 +868,18 @@ define(function(require) {
                                     'paper_bgcolor': 'rgba(66, 59, 59, 0.9)',
                                     'xaxis.linecolor': defaults.xaxis.linecolor,
                                     'yaxis.linecolor': defaults.xaxis.linecolor,
-			            'xaxis.tickfont.color': defaults.xaxis.tickfont.color,
-			            'yaxis.tickfont.color': defaults.yaxis.tickfont.color,
-			            'yaxis.titlefont.color': defaults.yaxis.titlefont.color,
-			            'xaxis.titlefont.color': defaults.xaxis.titlefont.color,
-			            'xaxis.tickfont.size': defaults.xaxis.tickfont.size,
-			            'yaxis.tickfont.size': defaults.yaxis.tickfont.size,
-			            'xaxis.titlefont.size': defaults.xaxis.titlefont.size,
-			            'yaxis.titlefont.size': defaults.yaxis.titlefont.size,
-			            'legend.font.size': defaults.legend.font.size,
-			            'legend.font.family': defaults.legend.font.family,
-			            'legend.font.color': defaults.legend.font.color,
-			            'legend.bgcolor': 'rgba(66, 59, 59, 0.9)'
+                                    'xaxis.tickfont.color': defaults.xaxis.tickfont.color,
+                                    'yaxis.tickfont.color': defaults.yaxis.tickfont.color,
+                                    'yaxis.titlefont.color': defaults.yaxis.titlefont.color,
+                                    'xaxis.titlefont.color': defaults.xaxis.titlefont.color,
+                                    'xaxis.tickfont.size': defaults.xaxis.tickfont.size,
+                                    'yaxis.tickfont.size': defaults.yaxis.tickfont.size,
+                                    'xaxis.titlefont.size': defaults.xaxis.titlefont.size,
+                                    'yaxis.titlefont.size': defaults.yaxis.titlefont.size,
+                                    'legend.font.size': defaults.legend.font.size,
+                                    'legend.font.family': defaults.legend.font.family,
+                                    'legend.font.color': defaults.legend.font.color,
+                                    'legend.bgcolor': 'rgba(66, 59, 59, 0.9)'
                                 });
                             }
                         }
@@ -958,7 +958,7 @@ define(function(require) {
         var caVars = Project.getActiveExperiment().variables.filter((x)=>x.endsWith('.caConc'));
         var vVars = Project.getActiveExperiment().variables.filter((x)=>x.endsWith('.v'));
         var rateVars = Project.getActiveExperiment().variables.filter((x)=>x.endsWith('.r'));
-        
+
         if (caVars.length > 0) {
             if (window.controlsMenuButton.props.configuration.menuItems.map((x)=>x.value).indexOf("apply_ca") == -1) {
                 var caMenuItem = {
@@ -989,7 +989,7 @@ define(function(require) {
             if (i >= 0) window.controlsMenuButton.props.configuration.menuItems.splice(i,1);
             window.controlsMenuButton.refresh();
         }
-        
+
         if (rateVars.length > 0) {
             if (window.controlsMenuButton.props.configuration.menuItems.map((x)=>x.value).indexOf("apply_rates") == -1) {
                 var rateMenuItem = {
@@ -1149,7 +1149,7 @@ define(function(require) {
                         c.addButtonToTitleBar($("<div class='fa fa-align-left' title='Colorscale'></div>").on('click', function(event) {
                             c.showMenu(c.colorscaleMenu, "colorscaleMenu", event);
                             event.stopPropagation();
-		    }));
+                        }));
 
 
                         var callback = function() {
@@ -1227,13 +1227,13 @@ define(function(require) {
                     var group = groups[i];
                     (function(group, i) {
                         G.addWidget(GEPPETTO.Widgets.PLOT).then(w => {
-		            w.setName("Recorded variables: "+group);
+                            w.setName("Recorded variables: "+group);
                             w.setPosition(100+(i*50), 100+(i*50));
                             lastPos = w.getPosition();
                             // first trace match population color, let plotly assign the rest
                             w.plotData(grouped[group][0], null, {color: colors[group]});
                             for (var j=1; j<grouped[group].length; ++j)
-			        w.plotData(grouped[group][j], null, {});
+                                w.plotData(grouped[group][j], null, {});
                         });
                     })(group, i, colors)
                 }
@@ -1262,7 +1262,7 @@ define(function(require) {
             }
             return v;
         };
-        
+
         // Dimensionless voltage, V
         window.getRecordedDLMembranePotentials = function() {
             var instances = Project.getActiveExperiment().getWatchedVariables(true, false);
@@ -1468,14 +1468,14 @@ define(function(require) {
             Project.getActiveExperiment().clone(function() {
                 var experimentName = prefix + " - ";
                 for(var label in parameterMap){
-                	//if a label starts with _ we don't show it as part of the experiment name
-                	if(!label.startsWith("_")){
-                		experimentName += label+"=";
-                	}
+                    //if a label starts with _ we don't show it as part of the experiment name
+                    if(!label.startsWith("_")){
+                        experimentName += label+"=";
+                    }
                     for(var p in parameterMap[label]){
                         eval(p).setValue(parameterMap[label][p]);
                         if(!label.startsWith("_")){
-                        	experimentName += parameterMap[label][p]+",";	
+                            experimentName += parameterMap[label][p]+",";
                         }
                     }
                 }
@@ -1549,29 +1549,29 @@ define(function(require) {
             var plotController = GEPPETTO.WidgetFactory.getController(GEPPETTO.Widgets.PLOT);
             if(experiments.length > 0 && membranePotentials.length>0){
                 G.addWidget(0).then(plotWidget  => {
-		   plotWidget.setName(protocolName + ' / membrane potentials').setSize(300, 500);
-		    // loop and plot all membrane potentials
-		    plotController.then(
-			function(pc) {
-			    (function (experiments) {
-				for(var i=0; i<experiments.length; i++){
-				    if(experiments[i].getStatus() == 'COMPLETED'){
-					for(var j=0; j<membranePotentials.length; j++){
-					    pc.plotStateVariable(
-						Project.getId(),
-						experiments[i].getId(),
-						membranePotentials[j],
-						plotWidget
-					    );
-					}
-				    }
-				}
-			    })(experiments)
-			}
-		    )
-		});
-	    }
-	};
+                    plotWidget.setName(protocolName + ' / membrane potentials').setSize(300, 500);
+                    // loop and plot all membrane potentials
+                    plotController.then(
+                        function(pc) {
+                            (function (experiments) {
+                                for(var i=0; i<experiments.length; i++){
+                                    if(experiments[i].getStatus() == 'COMPLETED'){
+                                        for(var j=0; j<membranePotentials.length; j++){
+                                            pc.plotStateVariable(
+                                                Project.getId(),
+                                                experiments[i].getId(),
+                                                membranePotentials[j],
+                                                plotWidget
+                                            );
+                                        }
+                                    }
+                                }
+                            })(experiments)
+                        }
+                    )
+                });
+            }
+        };
 
         window.showActivitySelector = function() { return activity.showActivitySelector(); }
 
@@ -1798,7 +1798,7 @@ define(function(require) {
         GEPPETTO.SceneController.setLinesThreshold(20000);
 
         GEPPETTO.G.autoFocusConsole(false);
-        
+
         GEPPETTO.UnitsController.addUnit("V","Membrane potential");
         GEPPETTO.UnitsController.addUnit("mol_per_m3","Concentration");
         GEPPETTO.UnitsController.addUnit("S / m2","Conductance density");

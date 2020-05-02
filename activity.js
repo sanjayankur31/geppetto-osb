@@ -81,15 +81,15 @@ define(function(require) {
             function clickHandler(event) {
                 if (event.originalEvent.target.id == 'histbin')
                     return true;
-            	if(!firstClick){
-            	    handleFirstClick(event);
-            	    setTimeout(function() { firstClick=false;}, 200); //closes the window to click again (dbclick)
+                if(!firstClick){
+                    handleFirstClick(event);
+                    setTimeout(function() { firstClick=false;}, 200); //closes the window to click again (dbclick)
                     modalContent.modal('hide');
-            	}
-            	else{
-            	    modalContent.modal('hide');
-            	    firstClick=false;
-            	}
+                }
+                else{
+                    modalContent.modal('hide');
+                    firstClick=false;
+                }
             }
             modalContent.find('.card').on('click', clickHandler);
             // value seems to only ever be updated once if we don't bind this explicitly (why?)
