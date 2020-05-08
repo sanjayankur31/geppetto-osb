@@ -127,15 +127,15 @@ define(function(require) {
                 formData['simulator'] = Project.getActiveExperiment().simulatorConfigurations[pathRef].getSimulator();
             }
 
-        var uiSchema = {
-        dropboxUpload: {
-            classNames: "dropbox-check",
-            ...(!GEPPETTO.UserController.getDropboxToken()) && {'ui:disabled': 'false'}
-        },
+            var uiSchema = {
+                dropboxUpload: {
+                    classNames: "dropbox-check",
+                    ...(!GEPPETTO.UserController.getDropboxToken()) && {'ui:disabled': 'false'}
+                },
                 timeStep: {
                     ...(required_dt) && {'ui:disabled': 'true'}
                 }
-        };
+            };
 
             var submitHandler = function(data) {
                 var formData = data.formData;
