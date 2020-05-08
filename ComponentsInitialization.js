@@ -779,126 +779,138 @@ define(function(require) {
 
         // theme button
         $("<div id='themeButton' class='row foreground-controls'/>").appendTo('#controls');
-        window.themeSet = false;
-        window.theme = function (t) {
+        // records the current theme
+        window.isWhiteThemeSet = false;
+        // Set the white theme
+        window.setWhiteTheme = function () {
+            Canvas1.setBackgroundColor("#FFFFFF");
+            GEPPETTO.WidgetFactory.getController(GEPPETTO.Widgets.PLOT).then(
+                controller => {
+                    var plots = controller.getWidgets();
+                    for (var i=0; i<plots.length; ++i) {
+                        if (plots[i].controller.isColorbar(plots[i])) {
+                            Plotly.relayout(plots[i].plotDiv, {
+                                'plot_bgcolor': '#fff',
+                                'paper_bgcolor': 'rgb(255, 255, 255)',
+                                'xaxis.tickfont.color': 'rgb(80, 80, 80)',
+                                'yaxis.tickfont.color': 'rgb(80, 80, 80)',
+                                'yaxis.titlefont.color': 'rgb(80, 80, 80)',
+                                'xaxis.titlefont.color': 'rgb(80, 80, 80)',
+                                'xaxis.showticklabels': true,
+                                'xaxis.tickcolor': 'rgb(80, 80, 80)',
+                                'xaxis.tickfont.size': 11,
+                                'yaxis.tickfont.size': 11,
+                                'xaxis.titlefont.size': 12,
+                                'yaxis.titlefont.size': 12
+                            });
+                        } else {
+                            Plotly.restyle(plots[i].plotDiv, {
+                                'colorbar.titlefont.color': 'rgb(80, 80, 80)',
+                                'colorbar.tickfont.color': 'rgb(80, 80, 80)'
+                            });
+                            Plotly.relayout(plots[i].plotDiv, {
+                                'plot_bgcolor': '#fff',
+                                'paper_bgcolor': 'rgb(255, 255, 255)',
+                                'xaxis.linecolor': 'rgb(80, 80, 80)',
+                                'yaxis.linecolor': 'rgb(80, 80, 80)',
+                                'xaxis.tickfont.color': 'rgb(80, 80, 80)',
+                                'yaxis.tickfont.color': 'rgb(80, 80, 80)',
+                                'yaxis.titlefont.color': 'rgb(80, 80, 80)',
+                                'xaxis.titlefont.color': 'rgb(80, 80, 80)',
+                                'xaxis.tickfont.size': 11,
+                                'yaxis.tickfont.size': 11,
+                                'xaxis.titlefont.size': 12,
+                                'yaxis.titlefont.size': 12,
+                                'legend.font.size': 12,
+                                'legend.font.color': 'rgb(80, 80, 80)',
+                                'legend.bgcolor': 'rgb(255, 255, 255)'
+                            });
+                        }
+                    }
+                });
+            $('head').append(
+                $('<link rel="stylesheet" type="text/css"/>')
+                    .attr('href', 'geppetto/extensions/geppetto-osb/css/unpacked/white-theme.css')
+            );
+            window.isWhiteThemeSet = true;
+        }
+        // Unset the white theme
+        window.unsetWhiteTheme = function () {
+            Canvas1.setBackgroundColor("none");
+            GEPPETTO.WidgetFactory.getController(GEPPETTO.Widgets.PLOT).then(
+                controller => {
+                    var plots = controller.getWidgets();
+                    for (var i=0; i<plots.length; ++i) {
+                        var defaults = plots[i].defaultOptions();
+                        if (plots[i].controller.isColorbar(plots[i])) {
+                            Plotly.relayout(plots[i].plotDiv, {
+                                'plot_bgcolor': 'transparent',
+                                'paper_bgcolor': 'rgb(66, 59, 59, 0.9)',
+                                'xaxis.tickfont.color': defaults.xaxis.tickfont.color,
+                                'yaxis.tickfont.color': defaults.yaxis.tickfont.color,
+                                'yaxis.titlefont.color': defaults.yaxis.titlefont.color,
+                                'xaxis.titlefont.color': defaults.xaxis.titlefont.color,
+                                'xaxis.showticklabels': true,
+                                'xaxis.tickcolor': defaults.xaxis.tickcolor,
+                                'xaxis.tickfont.size': 11,
+                                'yaxis.tickfont.size': 11,
+                                'xaxis.titlefont.size': 12,
+                                'yaxis.titlefont.size': 12
+                            });
+                        } else {
+                            Plotly.restyle(plots[i].plotDiv, {
+                                'colorbar.titlefont.color': defaults.yaxis.titlefont.color,
+                                'colorbar.tickfont.color': defaults.yaxis.tickfont.color
+                            });
+                            Plotly.relayout(plots[i].plotDiv, {
+                                'plot_bgcolor': 'transparent',
+                                'paper_bgcolor': 'rgba(66, 59, 59, 0.9)',
+                                'xaxis.linecolor': defaults.xaxis.linecolor,
+                                'yaxis.linecolor': defaults.xaxis.linecolor,
+                                'xaxis.tickfont.color': defaults.xaxis.tickfont.color,
+                                'yaxis.tickfont.color': defaults.yaxis.tickfont.color,
+                                'yaxis.titlefont.color': defaults.yaxis.titlefont.color,
+                                'xaxis.titlefont.color': defaults.xaxis.titlefont.color,
+                                'xaxis.tickfont.size': defaults.xaxis.tickfont.size,
+                                'yaxis.tickfont.size': defaults.yaxis.tickfont.size,
+                                'xaxis.titlefont.size': defaults.xaxis.titlefont.size,
+                                'yaxis.titlefont.size': defaults.yaxis.titlefont.size,
+                                'legend.font.size': defaults.legend.font.size,
+                                'legend.font.family': defaults.legend.font.family,
+                                'legend.font.color': defaults.legend.font.color,
+                                'legend.bgcolor': 'rgba(66, 59, 59, 0.9)'
+                            });
+                        }
+                    }
+                });
+            $('link[href$="white-theme.css"]').remove();
+            window.isWhiteThemeSet = false;
+        }
+        // t maybe undefined, or true or false
+        // if it is true, the white theme is used
+        // if it is false, the theme is reset to the default theme
+        window.toggleTheme = function (t) {
             if (typeof t === 'undefined') {
-                return window.themeSet;
+                return window.isWhiteThemeSet;
             }
             else if (t) {
-                Canvas1.setBackgroundColor("#FFFFFF");
-                GEPPETTO.WidgetFactory.getController(GEPPETTO.Widgets.PLOT).then(
-                    controller => {
-                        var plots = controller.getWidgets();
-                        for (var i=0; i<plots.length; ++i) {
-                            if (plots[i].controller.isColorbar(plots[i])) {
-                                Plotly.relayout(plots[i].plotDiv, {
-                                    'plot_bgcolor': '#fff',
-                                    'paper_bgcolor': 'rgb(255, 255, 255)',
-                                    'xaxis.tickfont.color': 'rgb(80, 80, 80)',
-                                    'yaxis.tickfont.color': 'rgb(80, 80, 80)',
-                                    'yaxis.titlefont.color': 'rgb(80, 80, 80)',
-                                    'xaxis.titlefont.color': 'rgb(80, 80, 80)',
-                                    'xaxis.showticklabels': true,
-                                    'xaxis.tickcolor': 'rgb(80, 80, 80)',
-                                    'xaxis.tickfont.size': 11,
-                                    'yaxis.tickfont.size': 11,
-                                    'xaxis.titlefont.size': 12,
-                                    'yaxis.titlefont.size': 12
-                                });
-                            } else {
-                                Plotly.restyle(plots[i].plotDiv, {
-                                    'colorbar.titlefont.color': 'rgb(80, 80, 80)',
-                                    'colorbar.tickfont.color': 'rgb(80, 80, 80)'
-                                });
-                                Plotly.relayout(plots[i].plotDiv, {
-                                    'plot_bgcolor': '#fff',
-                                    'paper_bgcolor': 'rgb(255, 255, 255)',
-                                    'xaxis.linecolor': 'rgb(80, 80, 80)',
-                                    'yaxis.linecolor': 'rgb(80, 80, 80)',
-                                    'xaxis.tickfont.color': 'rgb(80, 80, 80)',
-                                    'yaxis.tickfont.color': 'rgb(80, 80, 80)',
-                                    'yaxis.titlefont.color': 'rgb(80, 80, 80)',
-                                    'xaxis.titlefont.color': 'rgb(80, 80, 80)',
-                                    'xaxis.tickfont.size': 11,
-                                    'yaxis.tickfont.size': 11,
-                                    'xaxis.titlefont.size': 12,
-                                    'yaxis.titlefont.size': 12,
-                                    'legend.font.size': 12,
-                                    'legend.font.color': 'rgb(80, 80, 80)',
-                                    'legend.bgcolor': 'rgb(255, 255, 255)'
-                                });
-                            }
-                        }
-                    });
-                $('head').append(
-                    $('<link rel="stylesheet" type="text/css"/>')
-                        .attr('href', 'geppetto/extensions/geppetto-osb/css/unpacked/white-theme.css')
-                );
-                window.themeSet = true;
+                window.setWhiteTheme()
             }
             else {
-                Canvas1.setBackgroundColor("none");
-                GEPPETTO.WidgetFactory.getController(GEPPETTO.Widgets.PLOT).then(
-                    controller => {
-                        var plots = controller.getWidgets();
-                        for (var i=0; i<plots.length; ++i) {
-                            var defaults = plots[i].defaultOptions();
-                            if (plots[i].controller.isColorbar(plots[i])) {
-                                Plotly.relayout(plots[i].plotDiv, {
-                                    'plot_bgcolor': 'transparent',
-                                    'paper_bgcolor': 'rgb(66, 59, 59, 0.9)',
-                                    'xaxis.tickfont.color': defaults.xaxis.tickfont.color,
-                                    'yaxis.tickfont.color': defaults.yaxis.tickfont.color,
-                                    'yaxis.titlefont.color': defaults.yaxis.titlefont.color,
-                                    'xaxis.titlefont.color': defaults.xaxis.titlefont.color,
-                                    'xaxis.showticklabels': true,
-                                    'xaxis.tickcolor': defaults.xaxis.tickcolor,
-                                    'xaxis.tickfont.size': 11,
-                                    'yaxis.tickfont.size': 11,
-                                    'xaxis.titlefont.size': 12,
-                                    'yaxis.titlefont.size': 12
-                                });
-                            } else {
-                                Plotly.restyle(plots[i].plotDiv, {
-                                    'colorbar.titlefont.color': defaults.yaxis.titlefont.color,
-                                    'colorbar.tickfont.color': defaults.yaxis.tickfont.color
-                                });
-                                Plotly.relayout(plots[i].plotDiv, {
-                                    'plot_bgcolor': 'transparent',
-                                    'paper_bgcolor': 'rgba(66, 59, 59, 0.9)',
-                                    'xaxis.linecolor': defaults.xaxis.linecolor,
-                                    'yaxis.linecolor': defaults.xaxis.linecolor,
-                                    'xaxis.tickfont.color': defaults.xaxis.tickfont.color,
-                                    'yaxis.tickfont.color': defaults.yaxis.tickfont.color,
-                                    'yaxis.titlefont.color': defaults.yaxis.titlefont.color,
-                                    'xaxis.titlefont.color': defaults.xaxis.titlefont.color,
-                                    'xaxis.tickfont.size': defaults.xaxis.tickfont.size,
-                                    'yaxis.tickfont.size': defaults.yaxis.tickfont.size,
-                                    'xaxis.titlefont.size': defaults.xaxis.titlefont.size,
-                                    'yaxis.titlefont.size': defaults.yaxis.titlefont.size,
-                                    'legend.font.size': defaults.legend.font.size,
-                                    'legend.font.family': defaults.legend.font.family,
-                                    'legend.font.color': defaults.legend.font.color,
-                                    'legend.bgcolor': 'rgba(66, 59, 59, 0.9)'
-                                });
-                            }
-                        }
-                    });
-                $('link[href$="white-theme.css"]').remove();
-                window.themeSet = false;
+                window.unsetWhiteTheme()
             }
         }
 
         var configuration = {
             id: "themeButton",
-            condition: "window.theme()",
+            condition: "window.toggleTheme()",
             "false": {
-                "action": "window.theme(true)",
+                "action": "window.toggleTheme(true)",
                 "icon": "fa fa-paint-brush",
                 "label": "",
             },
             "true": {
-                "action": "window.theme(false)",
+                "action": "window.toggleTheme(false)",
                 "icon": "fa fa-paint-brush",
                 "label": "",
             }
@@ -1084,7 +1096,7 @@ define(function(require) {
 
         GEPPETTO.on(GEPPETTO.Events.Canvas_initialised, function() {
             if (Canvas1.viewState.custom.backgroundColor === '#FFFFFF')
-                window.theme(true);
+                window.toggleTheme(true);
         });
 
         //OSB Utility functions
